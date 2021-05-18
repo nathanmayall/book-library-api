@@ -14,12 +14,12 @@ describe("/readers", () => {
       Reader.create({
         name: "Elizabeth Bennet",
         email: "future_ms_darcy@gmail.com",
-        password: "abcdef",
+        password: "Morethan8Characters",
       }),
       Reader.create({
         name: "Arya Stark",
         email: "vmorgul@me.com",
-        password: "iron",
+        password: "helpme1234",
       }),
       Reader.create({
         name: "Lyra Belacqua",
@@ -56,6 +56,13 @@ describe("/readers", () => {
         });
 
         expect(response.status).to.equal(400);
+        expect(response.body.name).to.equal(
+          "Name must be between 3 and 25 characters"
+        );
+        expect(response.body.email).to.equal("Must be a valid email");
+        expect(response.body.password).to.equal(
+          "Password must be between 8 and 20 characters"
+        );
       });
     });
   });
