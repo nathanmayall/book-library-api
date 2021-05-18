@@ -16,8 +16,11 @@ app.use((err, req, res, next) => {
   err.errors.map((e) => {
     errors[e.path] = e.message;
   });
-
-  res.status(400).send(errors);
+  if (err.errors[0].type === "Validation error") {
+    res.status(400).send(errors);
+  } else {
+    res.status(500).send({ error: "Something went wrong" });
+  }
 });
 
 module.exports = app;
