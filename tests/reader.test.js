@@ -48,6 +48,15 @@ describe("/readers", () => {
         expect(newReaderRecord.email).to.equal("Nathan@gmail.com");
         expect(newReaderRecord.password).to.equal("HelloDave");
       });
+      it("rejects invalid input", async () => {
+        const response = await request(app).post("/readers").send({
+          name: "",
+          email: "hello",
+          password: "Secret",
+        });
+
+        expect(response.status).to.equal(400);
+      });
     });
   });
 

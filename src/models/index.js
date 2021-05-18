@@ -16,6 +16,7 @@ const setupDatabase = () => {
   const Book = BookModel(connection, Sequelize);
 
   connection.sync({ alter: true });
+
   return { Reader, Book };
 };
 

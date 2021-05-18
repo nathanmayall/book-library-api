@@ -10,4 +10,14 @@ app.use(morgan("tiny"), express.json());
 app.use(readerRoutes);
 app.use(bookRoutes);
 
+app.use((err, req, res, next) => {
+  let errors = {};
+
+  err.errors.map((e) => {
+    errors[e.path] = e.message;
+  });
+
+  res.status(400).send(errors);
+});
+
 module.exports = app;
