@@ -11,7 +11,7 @@ app.use(readerRoutes);
 app.use(bookRoutes);
 
 app.use((err, req, res, next) => {
-  let errors = {};
+  const errors = {};
 
   err.errors.map((e) => {
     errors[e.path] = e.message;
