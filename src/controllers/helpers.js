@@ -1,5 +1,14 @@
 const { Book, Reader } = require("../models");
 
+const removePassword = (oldObj) => {
+  if (oldObj.length > 1) {
+    oldObj.map((o) => delete o.dataValues.password);
+  } else if (oldObj.dataValues.hasOwnProperty("password")) {
+    delete oldObj.dataValues.password;
+  }
+  return oldObj;
+};
+
 const getModel = (model) => {
   switch (model) {
     case "book":
@@ -13,7 +22,7 @@ const getModel = (model) => {
 
 const addOne = async (req, res, item, next) => {
   try {
-    res.status(201).send(await getModel(item).create(req.body));
+    res.status(201).send(removePassword(await getModel(item).create(req.body)));
   } catch (err) {
     next(err);
   }
@@ -21,7 +30,7 @@ const addOne = async (req, res, item, next) => {
 
 const getAll = async (res, item, next) => {
   try {
-    res.send(await getModel(item).findAll());
+    res.send(removePassword(await getModel(item).findAll()));
   } catch (err) {
     next(err);
   }
@@ -31,7 +40,7 @@ const getOne = async (req, res, item, next) => {
   try {
     const oneItem = await getModel(item).findByPk(req.params.Id);
     oneItem
-      ? res.send(oneItem)
+      ? res.send(removePassword(oneItem))
       : res.status(404).send({ error: `The ${item} could not be found.` });
   } catch (err) {
     next(err);
