@@ -13,7 +13,7 @@ module.exports = (connection, DataTypes) => {
       allowNull: false,
       validate: {
         isEmail: { args: true, msg: "Must be a valid email" },
-        notNull: true,
+        notNull: { args: true, msg: "Please enter an email" },
       },
     },
     password: {

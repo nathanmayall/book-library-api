@@ -12,20 +12,17 @@ app.use(bookRoutes);
 
 app.use((err, req, res, next) => {
   const errors = {};
-  console.log(err);
-  res.status(500).send(err);
-  // if (
-  //   err.errors[0].type === "Validation error" ||
-  //   err.errors[0].type === "notNull Violation"
-  // ) {
-  //   err.errors.map((e) => {
-  //     errors[e.path] = e.message;
-  //   });
-  //   res.status(400).send(errors);
-  // } else {
-  //   console.log(err);
-  //   res.status(500).send({ error: "Something went wrong" });
-  // }
+  if (err.name === "SequelizeValidationError") {
+    err.errors.map((e) => {
+      errors[e.path] = e.message;
+    });
+    res.status(400).send(errors);
+  } else if (err.statusCode) {
+    res.status(err.statusCode).send({ error: `${err.type}` });
+  } else {
+    console.warn(err);
+    res.status(500).send({ error: "Something went wrong" });
+  }
 });
 
 module.exports = app;
