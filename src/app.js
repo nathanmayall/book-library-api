@@ -12,13 +12,16 @@ app.use(bookRoutes);
 
 app.use((err, req, res, next) => {
   const errors = {};
-
   err.errors.map((e) => {
     errors[e.path] = e.message;
   });
-  if (err.errors[0].type === "Validation error") {
+  if (
+    err.errors[0].type === "Validation error" ||
+    err.errors[0].type === "notNull Violation"
+  ) {
     res.status(400).send(errors);
   } else {
+    console.log(err);
     res.status(500).send({ error: "Something went wrong" });
   }
 });

@@ -1,59 +1,16 @@
-const { Reader } = require("../models");
+const { getAll, getOne, updateOne, addOne, deleteOne } = require("./helpers");
 
-const addReader = async (req, res, next) => {
-  try {
-    const newReader = await Reader.create(req.body);
-    res.status(201).send(newReader);
-  } catch (err) {
-    next(err);
-  }
-};
+const addReader = async (req, res, next) => addOne(req, res, "reader", next);
 
-const getAllReaders = async (_, res, next) => {
-  try {
-    res.send(await Reader.findAll());
-  } catch (err) {
-    next(err);
-  }
-};
+const getAllReaders = async (_, res, next) => getAll(res, "reader", next);
 
-const getOneReader = async (req, res, next) => {
-  try {
-    const oneReader = await Reader.findByPk(req.params.Id);
-    oneReader
-      ? res.send(oneReader)
-      : res.status(404).send({ error: "The reader could not be found." });
-  } catch (err) {
-    next(err);
-  }
-};
+const getOneReader = async (req, res, next) => getOne(req, res, "reader", next);
 
-const updateAReader = async (req, res, next) => {
-  try {
-    const [isUpdated] = await Reader.update(
-      { email: req.body.email },
-      { where: { id: req.params.Id } }
-    );
+const updateAReader = async (req, res, next) =>
+  updateOne(req, res, "reader", next);
 
-    isUpdated
-      ? res.sendStatus(200)
-      : res.status(404).send({ error: "The reader could not be found." });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const deleteAReader = async (req, res, next) => {
-  try {
-    const isDeleted = await Reader.destroy({ where: { id: req.params.Id } });
-
-    isDeleted
-      ? res.sendStatus(204)
-      : res.status(404).send({ error: "The reader could not be found." });
-  } catch (err) {
-    next(err);
-  }
-};
+const deleteAReader = async (req, res, next) =>
+  deleteOne(req, res, "reader", next);
 
 module.exports = {
   addReader,
