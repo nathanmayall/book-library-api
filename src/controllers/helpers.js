@@ -1,4 +1,4 @@
-const { Book, Reader } = require("../models");
+const { Book, Reader, Author, Genre } = require("../models");
 
 const removePassword = (oldObj) => {
   if (oldObj.length > 1) {
@@ -15,6 +15,10 @@ const getModel = (model) => {
       return Book;
     case "reader":
       return Reader;
+    case "author":
+      return Author;
+    case "genre":
+      return Genre;
     default:
       throw new Error("Model not passed into helper function");
   }

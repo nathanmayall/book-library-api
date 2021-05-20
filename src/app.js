@@ -2,6 +2,8 @@ const express = require("express");
 const morgan = require("morgan");
 const readerRoutes = require("./routes/reader");
 const bookRoutes = require("./routes/book");
+const authorRoutes = require("./routes/author");
+const genreRoutes = require("./routes/genre");
 
 const app = express();
 
@@ -9,6 +11,8 @@ app.use(morgan("tiny"), express.json());
 
 app.use(readerRoutes);
 app.use(bookRoutes);
+app.use(authorRoutes);
+app.use(genreRoutes);
 
 app.use((err, req, res, next) => {
   const errors = {};
