@@ -1,35 +1,53 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const { Book } = require("../src/models");
+const { Book, Genre } = require("../src/models");
 const app = require("../src/app");
 
 describe("/books", () => {
   let books;
-  before(async () => Book.sequelize.sync());
+  let genres;
+
+  before(async () => {
+    Book.sequelize.sync();
+    Genre.sequelize.sync();
+  });
 
   beforeEach(async () => {
     await Book.destroy({ where: {} });
+    await Genre.destroy({ where: {} });
+
+    await Promise.all([
+      Genre.create({
+        genre: "Horror",
+      }),
+      Genre.create({
+        genre: "Sci-fi",
+      }),
+    ]);
+
+    genres = await Genre.findAll();
 
     await Promise.all([
       Book.create({
         title: "War of the worlds",
         author: "H G Welles",
-        genre: "Sci-Fi",
+        GenreId: genres[0].id,
         ISBN: "24353453212",
       }),
       Book.create({
         title: "1984",
         author: "George Orwell",
-        genre: "Dystopian Horror",
+        GenreId: genres[0].id,
         ISBN: "22322432431",
       }),
       Book.create({
         title: "Bravo Two Zero",
         author: "Andy McNab",
-        genre: "Fiction",
+        GenreId: genres[0].id,
         ISBN: "0459490512",
       }),
     ]);
+
     books = await Book.findAll();
   });
 
@@ -39,7 +57,7 @@ describe("/books", () => {
         const response = await request(app).post("/books").send({
           title: "Javascript for 3 yr olds",
           author: "Vladimir Lenin",
-          genre: "Horror",
+          GenreId: "2",
           ISBN: "1112223311",
         });
         const newBookRecord = await Book.findByPk(response.body.id, {
@@ -50,14 +68,13 @@ describe("/books", () => {
         expect(response.body.title).to.equal("Javascript for 3 yr olds");
         expect(newBookRecord.title).to.equal("Javascript for 3 yr olds");
         expect(newBookRecord.author).to.equal("Vladimir Lenin");
-        expect(newBookRecord.genre).to.equal("Horror");
+        expect(newBookRecord.GenreId).to.equal(2);
         expect(newBookRecord.ISBN).to.equal("1112223311");
       });
       it("rejects invalid input", async () => {
         const response = await request(app).post("/books").send({
           title: "",
           author: "he",
-          genre: "Se",
           ISBN: "1234",
         });
 
@@ -67,9 +84,6 @@ describe("/books", () => {
         );
         expect(response.body.author).to.equal(
           "Author must be between 3 and 25 characters"
-        );
-        expect(response.body.genre).to.equal(
-          "Genre must be between 3 and 25 characters"
         );
         expect(response.body.ISBN).to.equal(
           "ISBN must be between 10 and 13 characters"

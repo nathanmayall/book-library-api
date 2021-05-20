@@ -44,9 +44,7 @@ describe("/genres", () => {
         });
 
         expect(response.status).to.equal(400);
-        expect(response.body.genre).to.equal(
-          "Genre must be between 3 and 25 characters"
-        );
+        expect(response.body.genre).to.equal("A genre must be entered");
       });
     });
   });
