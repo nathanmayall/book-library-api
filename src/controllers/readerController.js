@@ -2,7 +2,7 @@ const { getAll, getOne, updateOne, addOne, deleteOne } = require("./helpers");
 
 const addReader = async (req, res, next) => addOne(req, res, "reader", next);
 
-const getAllReaders = async (_, res, next) => getAll(res, "reader", next);
+const getAllReaders = async (_, res, next) => getAll(_, res, "reader", next);
 
 const getOneReader = async (req, res, next) => getOne(req, res, "reader", next);
 

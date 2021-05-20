@@ -2,7 +2,7 @@ const { getAll, getOne, updateOne, deleteOne, addOne } = require("./helpers");
 
 const addBook = async (req, res, next) => addOne(req, res, "book", next);
 
-const getAllBooks = async (_, res, next) => getAll(res, "book", next);
+const getAllBooks = async (_, res, next) => getAll(_, res, "book", next);
 
 const getOneBook = async (req, res, next) => getOne(req, res, "book", next);
 

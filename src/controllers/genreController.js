@@ -1,5 +1,4 @@
 const {
-  getAll,
   getOne,
   updateOne,
   deleteOne,
