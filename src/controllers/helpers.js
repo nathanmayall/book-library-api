@@ -1,12 +1,12 @@
 const { Book, Reader, Author, Genre } = require("../models");
 
 const removePassword = (oldObj) => {
-  if (oldObj.length > 1) {
+  if (oldObj.length === 0) {
+    return oldObj;
+  } else if (oldObj.length >= 1) {
     oldObj.map((o) => delete o.dataValues.password);
-  } else if (oldObj.dataValues.hasOwnProperty("password")) {
-    delete oldObj.dataValues.password;
+    return oldObj;
   }
-  return oldObj;
 };
 
 const getModel = (model) => {
@@ -42,7 +42,10 @@ const getAll = async (res, item, next) => {
 
 const getOne = async (req, res, item, next) => {
   try {
-    const oneItem = await getModel(item).findByPk(req.params.Id);
+    const oneItem = await getModel(item).findByPk(req.params.Id, {
+      includes: Genre,
+    });
+
     oneItem
       ? res.send(removePassword(oneItem))
       : res.status(404).send({ error: `The ${item} could not be found.` });
