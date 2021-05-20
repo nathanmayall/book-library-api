@@ -1,8 +1,15 @@
-const { getAll, getOne, updateOne, deleteOne, addOne } = require("./helpers");
+const {
+  getAll,
+  getOne,
+  updateOne,
+  deleteOne,
+  addOne,
+  getAllBooks,
+} = require("./helpers");
 
 const addGenre = async (req, res, next) => addOne(req, res, "genre", next);
 
-const getAllGenres = async (_, res, next) => getAll(res, "genre", next);
+const getAllGenres = async (_, res, next) => getAllBooks(_, res, "genre", next);
 
 const getOneGenre = async (req, res, next) => getOne(req, res, "genre", next);
 

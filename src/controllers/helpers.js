@@ -1,12 +1,9 @@
 const { Book, Reader, Author, Genre } = require("../models");
 
 const removePassword = (oldObj) => {
-  if (oldObj.length === 0) {
-    return oldObj;
-  } else if (oldObj.length >= 1) {
-    oldObj.map((o) => delete o.dataValues.password);
-    return oldObj;
-  }
+  if (oldObj.dataValues?.password) delete oldObj.dataValues.password;
+  if (oldObj.length >= 1) oldObj.map((o) => delete o.dataValues?.password);
+  return oldObj;
 };
 
 const getModel = (model) => {
@@ -32,7 +29,7 @@ const addOne = async (req, res, item, next) => {
   }
 };
 
-const getAll = async (res, item, next) => {
+const getAll = async (_, res, item, next) => {
   try {
     res.send(removePassword(await getModel(item).findAll()));
   } catch (err) {
@@ -43,7 +40,7 @@ const getAll = async (res, item, next) => {
 const getOne = async (req, res, item, next) => {
   try {
     const oneItem = await getModel(item).findByPk(req.params.Id, {
-      includes: Genre,
+      include: Genre,
     });
 
     oneItem
@@ -80,4 +77,12 @@ const deleteOne = async (req, res, item, next) => {
   }
 };
 
-module.exports = { addOne, getAll, getOne, updateOne, deleteOne };
+const getAllBooks = async (_, res, item, next) => {
+  try {
+    res.send(await getModel(item).findAll({ include: Book }));
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { addOne, getAll, getOne, updateOne, deleteOne, getAllBooks };
