@@ -21,6 +21,17 @@ const getModel = (model) => {
   }
 };
 
+const includeModels = (model) => {
+  switch (model) {
+    case "book":
+      return { include: Genre };
+    case "genre":
+      return { inclide: Book };
+    default:
+      return {};
+  }
+};
+
 const addOne = async (req, res, item, next) => {
   try {
     res.status(201).send(removePassword(await getModel(item).create(req.body)));
@@ -39,9 +50,10 @@ const getAll = async (_, res, item, next) => {
 
 const getOne = async (req, res, item, next) => {
   try {
-    const oneItem = await getModel(item).findByPk(req.params.Id, {
-      include: Genre,
-    });
+    const oneItem = await getModel(item).findByPk(
+      req.params.Id,
+      includeModels(item)
+    );
 
     oneItem
       ? res.send(removePassword(oneItem))
