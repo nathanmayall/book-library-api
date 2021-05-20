@@ -9,6 +9,7 @@ module.exports = (connection, DataTypes) => {
           msg: "Genre must be between 3 and 25 characters",
         },
         notNull: { args: true, msg: "A genre must be entered" },
+        notEmpty: { args: true, msg: "A genre must be entered" },
       },
     },
   };

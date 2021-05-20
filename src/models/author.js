@@ -9,6 +9,7 @@ module.exports = (connection, DataTypes) => {
           msg: "author must be between 3 and 25 characters",
         },
         notNull: { args: true, msg: "An author must be entered" },
+        notEmpty: { args: true, msg: "An author must be entered" },
       },
     },
   };
